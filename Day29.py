@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from random import choice, randint, shuffle
 import pyperclip
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_pass():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -22,19 +23,33 @@ def save():
     website = websiteE.get()
     email = emailE.get()
     password = passwordE.get()
+    new_data = {
+        website: {
+            "email": email,
+            "password": password,
+        }
+    }
     if website == "" or email == "":
         messagebox.showinfo(title="Oops", message="no website or email is added")
     else:
-        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} "
-                                                      f"\nPassword: {password} \nis it ok to save?")
-        if is_ok:
-            with open("data.txt","a") as data_file:
-                data_file.write(f"{website} | {email} | {password}\n")
-                websiteE.delete(0, END)
-                passwordE.delete(0, END)
+        try:
+            with open("data.json","r") as data_file:
+                # read old data
+                data = json.load(data_file)
+        except FileNotFoundError:
+            with open("data.json", "w") as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:
+            # update old data
+            data.update(new_data)
+            with open("data.json", "w") as data_file:
+                # save updated data
+                json.dump(data, data_file, indent= 4)
+        finally:
+            websiteE.delete(0, END)
+            passwordE.delete(0, END)
 
-        if website == "":
-            messagebox.askokcancel(title=website, message="no website is added")
+
 # ---------------------------- UI SETUP ----------------------------- #
 # window
 window = Tk()
