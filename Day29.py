@@ -49,6 +49,21 @@ def save():
             websiteE.delete(0, END)
             passwordE.delete(0, END)
 
+# ---------------------------- Find Password ----------------------------- #
+def find_password():
+    website = websiteE.get()
+    try:
+        with open("data.json") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No data file found.")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title= website, message= f"{email}\npassword: {password}")
+        else:
+            messagebox.showinfo(title="Error", message=f"No details for {website} exists.")
 
 # ---------------------------- UI SETUP ----------------------------- #
 # window
@@ -73,8 +88,8 @@ passwordL = Label(text="Password:")
 passwordL.grid(row= 3, column= 0)
 
 # Entries
-websiteE = Entry(width = 35)
-websiteE.grid(row= 1, column= 1, columnspan = 2)
+websiteE = Entry(width = 21)
+websiteE.grid(row= 1, column= 1)
 
 emailE = Entry(width = 35)
 emailE.grid(row= 2, column= 1, columnspan = 2)
@@ -84,6 +99,8 @@ passwordE = Entry(width = 21)
 passwordE.grid(row= 3, column= 1)
 
 # Buttons
+searchB = Button(text= "search", width=13, command = find_password)
+searchB.grid(row= 1, column =2)
 passwordB = Button(text= "Generate Password", command = generate_pass)
 passwordB.grid(row= 3, column= 2)
 addB = Button(text="Add",width=35, command = save)
