@@ -35,9 +35,7 @@ def save():
 
         if website == "":
             messagebox.askokcancel(title=website, message="no website is added")
-# ---------------------------- UI SETUP ------------------------------- #
-
-
+# ---------------------------- UI SETUP ----------------------------- #
 # window
 window = Tk()
 window.title("Password Manager")
